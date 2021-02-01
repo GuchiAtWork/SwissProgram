@@ -9,12 +9,12 @@ const typeDefs = gql`
 
   extend type Query {
     getAllDiaries: [Entry]
-    getDiariesByID(user_id: Int!): [Entry]
+    getDiariesByID: [Entry]
   }
 
   extend type Mutation {
     editDiary(id: Int!, entry: String!, private: Boolean): String
-    createDiary(user_id: Int!, entry: String!, private: Boolean = true): String
+    createDiary(entry: String!, private: Boolean = true): String
     deleteDiary(id: Int!): String
   }
 `;

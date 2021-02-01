@@ -13,8 +13,8 @@ const typeDefs = gql`
 
   type Mutation {
     signup(user: String!, pw: String!): String
-    changePW(user: String!, pw: String!): String
-    deleteUser(user: String!, pw: String!): String
+    changePW(pw: String!): String
+    deleteUser(pw: String!): String
   }
 `;
 

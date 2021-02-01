@@ -10,26 +10,44 @@ module.exports = {
     getAllDiaries: async (parent, args) => {
       const entries = await knex
         .from("diary")
-        .select("id", "entry", "username")
+        .select("diary.id", "entry", "username")
         .where("private", false)
         .join("users", { "users.id": "diary.user_id" });
       return entries;
     },
-    getDiariesByID: async (parent, args) => {
-      const user_id = args.user_id;
+    getDiariesByID: async (parent, args, context) => {
+      if (context.user === null) {
+        throw new AuthenticationError("Need JWT");
+      }
+
+      const user_id = context.user.user_id;
       const entries = await knex
         .from("diary")
-        .select("id", "entry", "username")
+        .select("diary.id", "entry", "username")
         .where("user_id", user_id)
         .join("users", { "users.id": "diary.user_id" });
       return entries;
     },
   },
   Mutation: {
-    editDiary: async (parent, args) => {
+    editDiary: async (parent, args, context) => {
+      if (context.user === null) {
+        throw new AuthenticationError("Need JWT");
+      }
+
       const entryID = args.id;
       const entry = args.entry;
       let makePrivate = args.private ? args.private : undefined;
+
+      const find = await knex
+        .from("diary")
+        .select("*")
+        .where("id", entryID)
+        .first();
+
+      if (find.user_id !== context.user.user_id) {
+        throw new UserInputError("This is not your diary - request denied");
+      }
 
       let updated;
 
@@ -51,8 +69,12 @@ module.exports = {
         );
       }
     },
-    createDiary: async (parent, args) => {
-      const userID = args.user_id;
+    createDiary: async (parent, args, context) => {
+      if (context.user === null) {
+        throw new AuthenticationError("Need JWT");
+      }
+
+      const userID = context.user.user_id;
       const entry = args.entry;
       const private = args.private;
 
@@ -63,11 +85,29 @@ module.exports = {
       });
       return "Successfully Created";
     },
-    deleteDiary: async (parent, args) => {
+    deleteDiary: async (parent, args, context) => {
+      if (context.user === null) {
+        throw new AuthenticationError("Need JWT");
+      }
+
       const entryID = args.id;
 
+      const find = await knex
+        .from("diary")
+        .select("*")
+        .where("id", entryID)
+        .first();
+
+      if (!find) {
+        throw new ApolloError("Diary does not exist");
+      }
+
+      if (find.user_id !== context.user.user_id) {
+        throw new UserInputError("This is not your diary - request denied");
+      }
+
       await knex("diary").where({ id: entryID }).del();
-      return "Entry Successfully Deleted";
+      return "Successfully Deleted";
     },
   },
 };

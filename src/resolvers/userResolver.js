@@ -4,6 +4,7 @@ const {
   ApolloError,
   UserInputError,
 } = require("apollo-server");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   Query: {
@@ -17,7 +18,17 @@ module.exports = {
         .first();
       if (find) {
         if (find.password === pw) {
-          return "Login successful";
+          return jwt.sign(
+            {
+              username: find.username,
+              user_id: find.id,
+            },
+            process.env.JWT_SECRET_KEY,
+            {
+              algorithm: "HS256",
+              expiresIn: "1h",
+            }
+          );
         } else {
           throw new UserInputError("Credentials entered are wrong");
         }
@@ -46,8 +57,12 @@ module.exports = {
       }
     },
 
-    changePW: async (parent, args) => {
-      const name = args.user;
+    changePW: async (parent, args, context) => {
+      if (context.user === null) {
+        throw new AuthenticationError("Need JWT");
+      }
+
+      const name = context.user.username;
       const pw = args.pw;
       const updated = await knex("users")
         .where({ username: name })
@@ -61,8 +76,12 @@ module.exports = {
       }
     },
 
-    deleteUser: async (parent, args) => {
-      const name = args.user;
+    deleteUser: async (parent, args, context) => {
+      if (context.user === null) {
+        throw new AuthenticationError("Need JWT");
+      }
+
+      const name = context.user.username;
       const pw = args.pw;
       const find = await knex
         .from("users")
