@@ -7,7 +7,7 @@ exports.up = function (knex) {
     table
       .integer("user_id")
       .references("id")
-      .inTable("user")
+      .inTable("users")
       .notNullable()
       .onDelete("cascade");
   });
