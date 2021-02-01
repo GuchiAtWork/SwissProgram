@@ -8,12 +8,14 @@ const typeDefs = gql`
   }
 
   type Query {
-    login: String
+    login(user: String, pw: String): String
   }
 
-  # type Mutation {
-  #   signup: String
-  # }
+  type Mutation {
+    signup(user: String!, pw: String!): String
+    changePW(user: String!, pw: String!): String
+    deleteUser(user: String!, pw: String!): String
+  }
 `;
 
 module.exports = typeDefs;
