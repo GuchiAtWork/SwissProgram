@@ -1,5 +1,6 @@
 const express = require("express");
-const { ApolloServer } = require("apollo-server-express");
+const { ApolloServer, ApolloError } = require("apollo-server-express");
+const { GraphQLError } = require("graphql");
 const _merge = require("lodash/merge");
 
 const userTypeDefs = require("./schemas/userSchema");
@@ -13,6 +14,13 @@ const app = express();
 const server = new ApolloServer({
   typeDefs: [userTypeDefs, diaryTypeDefs],
   resolvers,
+  formatError: (error) => {
+    if (error.originalError instanceof ApolloError) {
+      return error;
+    }
+
+    return new GraphQLError("Internal Server Error");
+  },
 });
 
 const port = process.env.PORT || 8080;

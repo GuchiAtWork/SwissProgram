@@ -1,4 +1,9 @@
 const knex = require("../db/knex");
+const {
+  AuthenticationError,
+  ApolloError,
+  UserInputError,
+} = require("apollo-server");
 
 module.exports = {
   Query: {
@@ -14,10 +19,10 @@ module.exports = {
         if (find.password === pw) {
           return "Login successful";
         } else {
-          return "Credentials entered are wrong";
+          throw new UserInputError("Credentials entered are wrong");
         }
       } else {
-        return "Credentials entered are wrong";
+        throw new UserInputError("Credentials entered are wrong");
       }
     },
   },
@@ -31,7 +36,7 @@ module.exports = {
         .where("username", name)
         .first();
       if (find) {
-        return "Please choose a unique username";
+        throw new ApolloError("Please choose a unique username");
       } else {
         const res = await knex("users").insert({
           username: name,
@@ -50,7 +55,9 @@ module.exports = {
       if (updated) {
         return "Successfully Updated";
       } else {
-        return "Either incorrect credentials or something went wrong";
+        throw new ApolloError(
+          "Either incorrect credentials or something went wrong"
+        );
       }
     },
 
@@ -67,10 +74,10 @@ module.exports = {
           await knex("users").where({ username: name }).del();
           return "User Deleted";
         } else {
-          return "Incorrect credentials - request denied";
+          throw new UserInputError("Incorrect credentials - request denied");
         }
       } else {
-        return "No such user exists";
+        throw new ApolloError("No such user exists");
       }
     },
   },
