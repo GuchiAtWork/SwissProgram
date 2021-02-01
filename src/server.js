@@ -1,12 +1,12 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
-const typeDefs = require("./schema");
-const resolvers = require("./resolver");
+const userTypeDefs = require("./schemas/userSchema");
+const userResolvers = require("./resolvers/userResolver");
 
 const app = express();
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  userTypeDefs,
+  userResolvers,
 });
 
 const port = process.env.PORT || 8080;
