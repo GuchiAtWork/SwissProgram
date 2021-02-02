@@ -14,6 +14,7 @@ const resolvers = _merge({}, userResolvers, diaryResolvers);
 const app = express();
 
 app.use("/", express.static("client"));
+app.use("/docs", express.static("doc/schema"));
 app.use(express.json());
 app.use(
   expressJwt({
