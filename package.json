@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "API that uses GraphQL",
   "main": "server.js",
+  "graphdoc": {
+    "endpoint": "http://localhost:8080/graphql",
+    "output": "./doc/schema"
+  },
   "scripts": {
     "start": "node -r dotenv/config src/server.js",
     "dev": "nodemon -r dotenv/config src/server.js",

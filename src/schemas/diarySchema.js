@@ -8,14 +8,34 @@ const typeDefs = gql`
   }
 
   extend type Query {
+    "Get all publicly available diaries - Returns back a list of entries"
     getAllDiaries: [Entry]
+
+    "Get all diaries made by current user - REQUIRES AUTH HEADER (JWT) - Returns back a list of entries"
     getDiariesByID: [Entry]
   }
 
   extend type Mutation {
-    editDiary(id: Int!, entry: String!, private: Boolean): String
-    createDiary(entry: String!, private: Boolean = true): String
-    deleteDiary(id: Int!): String
+    "Edit a specific diary made by current user - REQUIRES AUTH HEADER (JWT) - Returns back a message if successful"
+    editDiary(
+      "the diary id user wants to edit"
+      id: Int!
+      "new entry"
+      entry: String!
+      "make diary public"
+      private: Boolean
+    ): String
+
+    "Current user makes a new diary - REQUIRES AUTH HEADER (JWT) - Returns back a message if successful"
+    createDiary(
+      "new entry"
+      entry: String!
+      "make diary public"
+      private: Boolean = true
+    ): String
+
+    "Delete a specific diary (this diary made by cur user) - REQUIRES AUTH HEADER (JWT) - Returns back message if successful"
+    deleteDiary("specific diary that user wants to delete" id: Int!): String
   }
 `;
 

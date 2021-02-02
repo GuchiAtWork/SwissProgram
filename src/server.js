@@ -13,6 +13,7 @@ const resolvers = _merge({}, userResolvers, diaryResolvers);
 
 const app = express();
 
+app.use("/", express.static("client"));
 app.use(express.json());
 app.use(
   expressJwt({
