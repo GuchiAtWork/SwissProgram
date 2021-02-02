@@ -8,13 +8,22 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link href="./style.css" rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
 </head>
 
 <body>
-  <h1><del>The Swiss Program</del></h1>
-  <h2>The Personal Diary</h2>
-  
+  <div class="title">
+    <h1><del>The Swiss Program</del></h1>
+    <h2>The Personal Diary</h2>
+  </div>
+  <a href="https://github.com/GuchiAtWork/SwissProgram", target="_blank", id="git">Click here for the repository</a>
+  <a href="http://localhost:8080/docs", id="docs">Click here for the API documentation</a>
+  <p id="title">What is The Personal Diary?</p>
+  <p id="desc">The Personal Diary is an API service that records, updates and deletes your 
+    personal diary entries (if you do decide to use it). You can also share your diaries with everybody else (if you want to).
+    However, one must remember to sign up if they wish to use this service.
+  </p>
+  <p id="tip">Remember, send queries to /graphql !</p>
 </body>
 
 </html>

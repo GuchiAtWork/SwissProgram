@@ -1,0 +1,20 @@
+body {
+  text-align: center;
+}
+
+div {
+  border-style: dashed;
+}
+
+#git {
+  text-align: center;
+}
+
+#docs {
+  text-align: center;
+}
+
+#tip {
+  border-bottom-style: solid;
+  border-color: red;
+}
