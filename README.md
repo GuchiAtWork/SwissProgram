@@ -1,4 +1,4 @@
-~~# The Swiss Program ~~
+# ~~The Swiss Program~~
 ## The Personal Diary
 
 ### How to run this program ###
